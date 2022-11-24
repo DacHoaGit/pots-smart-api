@@ -17,13 +17,11 @@ class AuthController extends Controller
 
             $user = User::create([
                 'name' => $request->input('name'),
-                'location' => $request->input('location'),
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password'))
             ]);
 
             $token = $user->createToken('user_token')->plainTextToken;
-
             return response()->json(['user' => $user, 'token' => $token], 200);
         } catch (\Exception $e) {
             return response()->json([
