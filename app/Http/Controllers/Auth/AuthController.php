@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\LogoutRequest;
@@ -18,7 +18,8 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
-                'password' => Hash::make($request->input('password'))
+                'password' => Hash::make($request->input('password')),
+                'token_pots' => Str::random(10)
             ]);
 
             $token = $user->createToken('user_token')->plainTextToken;
@@ -37,7 +38,6 @@ class AuthController extends Controller
 
             $user = User::where('email', '=', $request->input('email'))->firstOrFail();
 
-
             if (Hash::check($request->input('password'), $user->password)) {
                 $token = $user->createToken('user_token')->plainTextToken;
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-                'message' => 'Something went wrong in AuthController.login'
+                'message' => false
             ]);
         }
     }
@@ -60,7 +60,6 @@ class AuthController extends Controller
             $user = User::findOrFail($request->input('user_id'));
 
             $user->tokens()->delete();
-
             return response()->json('User logged out!', 200);
         } catch (\Exception $e) {
             return response()->json([
