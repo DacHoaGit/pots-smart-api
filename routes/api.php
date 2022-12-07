@@ -14,8 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('suggestion', [\App\Http\Controllers\SuggestionController::class, 'store']);
+    Route::delete('suggestion/{id}', [\App\Http\Controllers\SuggestionController::class, 'destroy']);
+    Route::get('suggestionsbyuser', [\App\Http\Controllers\SuggestionController::class, 'getSuggestionsByUser']);
+
+    
+
 });
 
 Route::post('register', [\App\Http\Controllers\Auth\AuthController::class, 'register']);
