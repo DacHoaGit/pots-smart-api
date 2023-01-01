@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class SuggestionController extends Controller
 {   
-    public function getSuggestionsByUser(){
+    public function getSuggestions(){
         try {
-            $suggestions = Suggestion::where('user_id',Auth::user()->id)->orderByDesc('created_at')->get();
+            $suggestions = Suggestion::orderByDesc('created_at')->get();
             return response()->json($suggestions, 200);
         } catch (\Throwable $e) {
             return response()->json([
