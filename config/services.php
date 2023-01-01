@@ -30,5 +30,14 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'firebase' => [
+        'api_Key' => "AIzaSyDTwNIC2GwRtA_2NEBvPjkaYG_E6ciEzsU",
+        'auth_domain'=> "pots-smart.firebaseapp.com",
+        'database_url'=> "https://pots-smart-default-rtdb.firebaseio.com",
+        'project_id' => "pots-smart",
+        'storage_bucket' => "pots-smart.appspot.com",
+        'messaging_senderId' => "332257281506",
+        'app_id' => "1:332257281506:web:0303a15ce152b54807a5bb",
+        'measurement_id' => "G-9J8H48DBLJ",
+    ]
 ];
