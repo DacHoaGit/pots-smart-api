@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\StatusTimerEnum;
 use App\Http\Requests\TimerRequest;
+use App\Models\Device;
 use App\Models\Timer;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,8 @@ class TimerController extends Controller
 
     public function getTimers(){
         try {
-            $getTimers = Timer::orderByDesc('created_at')->get();
+            $user = Auth::user()->id;
+            $getTimers = Timer::where('user_id',$user)->with('device')->orderByDesc('created_at')->get();
             return response()->json($getTimers, 200);
         } catch (\Throwable $e) {
             return response()->json([
@@ -96,6 +98,10 @@ class TimerController extends Controller
             $timer->day_of_weeks = $day_of_week;
 
             $timer->check = false;
+
+            $device = Device::where('device',$request->input('device'))->first();
+            
+            $timer->device_id =$device->id;
             $timer->save();
 
             return response()->json('New suggestion created', 200);
