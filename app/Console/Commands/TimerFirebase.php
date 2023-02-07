@@ -41,39 +41,38 @@ class TimerFirebase extends Command
             $date = date('Y-m-d', strtotime($each->date));
             if($each->status == 1){
                 if ($time_current >= $each->time_start && $time_current <= $each->time_end && $date_current == $date) {
-                    $database->getReference('/'.$each->user->token_pots.'/status')->set([
-                        "bom" => $each->bom,
-                        "den" => $each->den,
-                        "auto" => $each->auto,
+                    $database->getReference('/'.$each->device->device.'/sensor')->update([
+                        "bom" => $each->bom ? 1 : 2,
+                        "den" => $each->den ? 1 : 2,
+                        "auto" => $each->auto ? 1 : 2,
                     ]);
                 }
                 if ($time_current >= $each->time_start && $time_current <= $each->time_end  && Str::contains($each->day_of_weeks, (Carbon::now()->dayOfWeek) + 1)) {
-                    $database->getReference('/'.$each->user->token_pots.'/status')->set([
-                        "bom" => $each->bom,
-                        "den" => $each->den,
-                        "auto" => $each->auto,
+                    $database->getReference('/'.$each->device->device.'/sensor')->update([
+                        "bom" => $each->bom ? 1 : 2,
+                        "den" => $each->den ? 1 : 2,
+                        "auto" => $each->auto ? 1 : 2,
                     ]);
                     $each->check = 1;
                 }
                 if ($time_current >= $each->time_end && $each->check == 1  && Str::contains($each->day_of_weeks, (Carbon::now()->dayOfWeek) + 1)) {
-                    $database->getReference('/'.$each->user->token_pots.'/status')->set([
-                        "bom" => 0,
-                        "den" => 0,
-                        "auto" => 0,
+                    $database->getReference('/'.$each->device->device.'/sensor')->update([
+                        "bom" => 0 ? 1 : 2,
+                        "den" => 0 ? 1 : 2,
+                        "auto" => 0 ? 1 : 2,
                     ]);
                     $each->check = 0;
                 }
             }
             if ($time_current >= $each->time_end && $date_current >= $date && $each->date ) {
-                $database->getReference('/'.$each->user->token_pots.'/status')->set([
-                    "bom" => 0,
-                    "den" => 0,
-                    "auto" => 0,
+                $database->getReference('/'.$each->device->device.'/sensor')->update([
+                    "bom" => 2,
+                    "den" => 2,
+                    "auto" => 2,
                 ]);
                 $each->delete();
                 continue;
             }
         }
     }
-    
 }
