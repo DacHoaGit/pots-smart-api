@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\LogoutRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -19,7 +20,8 @@ class AuthController extends Controller
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
-                'token_pots' => Str::random(10)
+                'token_pots' => Str::random(10),
+                'role' => 0,
             ]);
 
             $token = $user->createToken('user_token')->plainTextToken;
@@ -53,11 +55,11 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(LogoutRequest $request)
+    public function logout()
     {
         try {
 
-            $user = User::findOrFail($request->input('user_id'));
+            $user = User::findOrFail(Auth::user()->id);
 
             $user->tokens()->delete();
             return response()->json('User logged out!', 200);
