@@ -11,6 +11,19 @@ class SuggestionController extends Controller
 {   
     public function getSuggestions(){
         try {
+            $id = Auth::user()->id;
+            $suggestions = Suggestion::where('user_id',$id)->orderByDesc('created_at')->get();
+            return response()->json($suggestions, 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Something went wrong in PostController.store',
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function getAllSuggestions(){
+        try {
             $suggestions = Suggestion::orderByDesc('created_at')->get();
             return response()->json($suggestions, 200);
         } catch (\Throwable $e) {
